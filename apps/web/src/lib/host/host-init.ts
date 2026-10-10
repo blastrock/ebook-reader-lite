@@ -6,6 +6,7 @@
 
 import { exposeHostCommands, isHost, PROTOCOL_VERSION, sendToHost } from '$lib/host/host-bridge';
 import { installDebugHost } from '$lib/host/host-debug';
+import { initHostLookup } from '$lib/host/host-lookup';
 import { initHostPage } from '$lib/host/host-page';
 import { installHostStyles } from '$lib/host/host-styles';
 
@@ -27,6 +28,7 @@ export function initHost() {
   exposeHostCommands();
   installHostStyles();
   initHostPage();
+  initHostLookup();
 
   sendToHost('ready', {
     protocolVersion: PROTOCOL_VERSION,
