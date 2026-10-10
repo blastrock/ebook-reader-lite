@@ -22,6 +22,7 @@
   } from '$lib/css-classes';
   import { customReadingPointEnabled$, viewMode$ } from '$lib/data/store';
   import { ViewMode } from '$lib/data/view-mode';
+  import { isHost, sendToHost } from '$lib/host/host-bridge';
   import { dummyFn, isMobile$, isOnOldUrl } from '$lib/functions/utils';
   import { createEventDispatcher } from 'svelte';
   import Fa from 'svelte-fa';
@@ -89,6 +90,10 @@
     }
 
     items.push(mergeEntries.SETTINGS, mergeEntries.MANAGE);
+
+    if (isHost()) {
+      items.push(mergeEntries.EXIT);
+    }
 
     menuItems = items;
   }
@@ -211,6 +216,8 @@
           dispatch('domainHintClick');
         } else if (detail === mergeEntries.MANAGE.label) {
           dispatch('bookManagerClick');
+        } else if (detail === mergeEntries.EXIT.label) {
+          sendToHost('exit');
         }
       }}
     />

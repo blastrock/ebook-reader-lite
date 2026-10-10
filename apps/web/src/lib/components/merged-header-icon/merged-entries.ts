@@ -8,6 +8,7 @@ import {
   faBug,
   faChartLine,
   faCog,
+  faDoorOpen,
   faFileArrowUp,
   faFileZipper,
   faFolderPlus,
@@ -25,6 +26,7 @@ export const mergeEntries = {
     icon: faCog,
     title: 'Go to Reader Settings'
   },
+  EXIT: { routeId: '', label: 'Exit', icon: faDoorOpen, title: 'Exit the reader' },
   STATISTICS: {
     routeId: '/statistics',
     label: 'Statistics',
