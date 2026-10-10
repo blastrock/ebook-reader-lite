@@ -9,6 +9,7 @@ import { installDebugHost } from '$lib/host/host-debug';
 import { initHostLookup } from '$lib/host/host-lookup';
 import { initHostPage } from '$lib/host/host-page';
 import { installHostStyles } from '$lib/host/host-styles';
+import { initHostTheme } from '$lib/host/host-theme';
 
 let initialised = false;
 
@@ -29,6 +30,7 @@ export function initHost() {
   installHostStyles();
   initHostPage();
   initHostLookup();
+  initHostTheme();
 
   sendToHost('ready', {
     protocolVersion: PROTOCOL_VERSION,
