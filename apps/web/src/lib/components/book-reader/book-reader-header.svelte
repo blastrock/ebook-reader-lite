@@ -77,7 +77,7 @@
 
     if (isOldUrl) {
       items.push(mergeEntries.DOMAIN_HINT);
-    } else {
+    } else if (!isHost()) {
       items.push(mergeEntries.STATISTICS);
     }
 
@@ -89,11 +89,8 @@
       items.push(mergeEntries.READER_IMAGE_GALLERY);
     }
 
-    items.push(mergeEntries.SETTINGS, mergeEntries.MANAGE);
-
-    if (isHost()) {
-      items.push(mergeEntries.EXIT);
-    }
+    items.push(mergeEntries.SETTINGS);
+    items.push(isHost() ? mergeEntries.EXIT : mergeEntries.MANAGE);
 
     menuItems = items;
   }

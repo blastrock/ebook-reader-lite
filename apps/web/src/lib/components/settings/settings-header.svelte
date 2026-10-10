@@ -1,12 +1,21 @@
 <script lang="ts">
-  import { faBookOpenReader, faClock, faDatabase } from '@fortawesome/free-solid-svg-icons';
+  import {
+    faBookOpenReader,
+    faClock,
+    faDatabase,
+    faDoorOpen
+  } from '@fortawesome/free-solid-svg-icons';
   import Fa from 'svelte-fa';
+  import { mergeEntries } from '$lib/components/merged-header-icon/merged-entries';
   import MergedHeaderIcon from '$lib/components/merged-header-icon/merged-header-icon.svelte';
   import Ripple from '$lib/components/ripple.svelte';
-  import { baseHeaderClasses, pxScreen } from '$lib/css-classes';
+  import { baseHeaderClasses, baseIconClasses, pxScreen } from '$lib/css-classes';
+  import { isHost, sendToHost } from '$lib/host/host-bridge';
 
   export let leavePageLink: string;
   export let activeSettings: string;
+
+  $: exitsToHost = isHost() && leavePageLink.endsWith(mergeEntries.MANAGE.routeId);
 
   const settingItems = [
     {
@@ -40,6 +49,12 @@
         </button>
       {/each}
     </div>
-    <MergedHeaderIcon {leavePageLink} />
+    {#if exitsToHost}
+      <button class={baseIconClasses} title="Exit" on:click={() => sendToHost('exit')}>
+        <Fa icon={faDoorOpen} />
+      </button>
+    {:else}
+      <MergedHeaderIcon {leavePageLink} />
+    {/if}
   </div>
 </div>
