@@ -8,6 +8,8 @@
   import { fontFamilyGroupOne$, isOnline$, userFonts$ } from '$lib/data/store';
   import { dummyFn, isMobile, isMobile$ } from '$lib/functions/utils';
   import { MetaTags } from 'svelte-meta-tags';
+  import { onMount } from 'svelte';
+  import { initHost } from '$lib/host/host-init';
   import '../app.scss';
 
   let path = '';
@@ -82,6 +84,8 @@
   });
 
   page.subscribe((p) => (path = p.url.pathname));
+
+  onMount(initHost);
 </script>
 
 <svelte:window bind:online={$isOnline$} />
