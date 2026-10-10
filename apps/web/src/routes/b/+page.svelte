@@ -172,6 +172,7 @@
     getWeightedAverage
   } from '$lib/functions/utils';
   import { onKeydownReader } from './on-keydown-reader';
+  import { setHostPageManager } from '$lib/host/host-page';
   import { onDestroy, onMount, tick } from 'svelte';
   import Fa from 'svelte-fa';
   import {
@@ -191,6 +192,7 @@
   let autoScroller: AutoScroller | undefined;
   let bookmarkManager: BookmarkManager | undefined;
   let pageManager: PageManager | undefined;
+  $: setHostPageManager(pageManager);
   let bookmarkData: Promise<BooksDbBookmarkData | undefined> = Promise.resolve(undefined);
   let customReadingPointTop = -2;
   let customReadingPointLeft = -2;
@@ -576,6 +578,8 @@
   /** Experimental Code - May be removed any time without warning */
 
   onDestroy(() => {
+    setHostPageManager(undefined);
+
     if (browser) {
       document.removeEventListener('ttu-action', handleAction, false);
       document.documentElement.lang = 'ja';

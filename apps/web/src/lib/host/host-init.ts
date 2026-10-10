@@ -6,6 +6,7 @@
 
 import { exposeHostCommands, isHost, PROTOCOL_VERSION, sendToHost } from '$lib/host/host-bridge';
 import { installDebugHost } from '$lib/host/host-debug';
+import { initHostPage } from '$lib/host/host-page';
 import { installHostStyles } from '$lib/host/host-styles';
 
 let initialised = false;
@@ -25,6 +26,7 @@ export function initHost() {
 
   exposeHostCommands();
   installHostStyles();
+  initHostPage();
 
   sendToHost('ready', {
     protocolVersion: PROTOCOL_VERSION,
