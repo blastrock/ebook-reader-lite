@@ -52,6 +52,10 @@ export class BookmarkManagerContinuous implements BookmarkManager {
     return this.formatBookmarkData(bookId);
   }
 
+  charCountAtRange(range: Range) {
+    return this.calculator.getCharCountToPoint(range);
+  }
+
   getBookmarkBarPosition(bookmarkData: BooksDbBookmarkData): BookmarkPosData | undefined {
     const targetScroll = this.getBookmarkPosition(bookmarkData);
     if (!targetScroll) return undefined;

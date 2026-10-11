@@ -173,6 +173,7 @@
   } from '$lib/functions/utils';
   import { onKeydownReader } from './on-keydown-reader';
   import { setHostPageManager } from '$lib/host/host-page';
+  import { setHostBookmarkManager } from '$lib/host/host-position';
   import { onDestroy, onMount, tick } from 'svelte';
   import Fa from 'svelte-fa';
   import {
@@ -193,6 +194,7 @@
   let bookmarkManager: BookmarkManager | undefined;
   let pageManager: PageManager | undefined;
   $: setHostPageManager(pageManager);
+  $: setHostBookmarkManager(bookmarkManager);
   let bookmarkData: Promise<BooksDbBookmarkData | undefined> = Promise.resolve(undefined);
   let customReadingPointTop = -2;
   let customReadingPointLeft = -2;
@@ -579,6 +581,7 @@
 
   onDestroy(() => {
     setHostPageManager(undefined);
+    setHostBookmarkManager(undefined);
 
     if (browser) {
       document.removeEventListener('ttu-action', handleAction, false);

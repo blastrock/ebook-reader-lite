@@ -28,6 +28,9 @@ export interface BookmarkManager {
     bookmarkData: BooksDbBookmarkData,
     customReadingPointScrollOffset?: number
   ) => void;
+
+  /** Bookmark character count before the text node containing `range`. */
+  charCountAtRange: (range: Range) => number;
 }
 
 export interface PageManager {

@@ -64,4 +64,8 @@ export class BookmarkManagerPaginated implements BookmarkManager {
       lastBookmarkModified: new Date().getTime()
     };
   }
+
+  charCountAtRange(range: Range) {
+    return this.calculator.calcExploredCharCount(range);
+  }
 }

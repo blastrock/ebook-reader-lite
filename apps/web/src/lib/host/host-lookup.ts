@@ -6,6 +6,7 @@
 
 import { getParagraphNodes } from '$lib/components/book-reader/get-paragraph-nodes';
 import { registerHostCommand, sendToHost } from '$lib/host/host-bridge';
+import { positionAt } from '$lib/host/host-position';
 
 interface ParagraphMap {
   text: string;
@@ -91,7 +92,7 @@ function locate(map: ParagraphMap, position: number, isEnd: boolean) {
 
 function dismiss(x: number, y: number) {
   lastParagraph = undefined;
-  sendToHost('tap', { text: '', offset: -1, x, y });
+  sendToHost('tap', { text: '', offset: -1, x, y, position: -1 });
 }
 
 function onClick(event: MouseEvent) {
@@ -128,7 +129,13 @@ function onClick(event: MouseEvent) {
   }
 
   lastParagraph = map;
-  sendToHost('tap', { text: map.text, offset, x, y });
+  sendToHost('tap', {
+    text: map.text,
+    offset,
+    x,
+    y,
+    position: positionAt(caret.node, caret.offset)
+  });
 }
 
 function highlight({ start, length }: Record<string, unknown>) {
