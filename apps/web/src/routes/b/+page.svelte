@@ -173,7 +173,7 @@
   } from '$lib/functions/utils';
   import { onKeydownReader } from './on-keydown-reader';
   import { setHostPageManager } from '$lib/host/host-page';
-  import { setHostBookmarkManager } from '$lib/host/host-position';
+  import { getPeekPosition, setHostBookmarkManager } from '$lib/host/host-position';
   import { onDestroy, onMount, tick } from 'svelte';
   import Fa from 'svelte-fa';
   import {
@@ -353,7 +353,17 @@
   const initBookmarkData$ = rawBookData$.pipe(
     tap((rawBookData) => {
       if (!rawBookData) return;
-      bookmarkData = database.getBookmark(rawBookData.id);
+
+      const peek = getPeekPosition();
+      bookmarkData =
+        peek === undefined
+          ? database.getBookmark(rawBookData.id)
+          : Promise.resolve({
+              dataId: rawBookData.id,
+              exploredCharCount: peek,
+              progress: 0,
+              lastBookmarkModified: new Date().getTime()
+            });
     }),
     reduceToEmptyString()
   );
@@ -797,7 +807,7 @@
         scheduleReplication(StorageDataType.STATISTICS);
       }
 
-      if (bookmarkManager) {
+      if (bookmarkManager && getPeekPosition() === undefined) {
         const data = {
           ...bookmarkManager.formatBookmarkData($rawBookData$.id, customReadingPointScrollOffset),
           exploredCharCount: Math.max(0, bookCharCount - 1),
@@ -1143,6 +1153,8 @@
   }
 
   async function bookmarkPage() {
+    if (getPeekPosition() !== undefined) return;
+
     const bookId = getBookIdSync();
     if (!bookId || !bookmarkManager) return;
 
