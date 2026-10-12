@@ -568,3 +568,14 @@ pnpm build
 ### External Hoster
 
 In case you want to use external hoster like GDrive for data import/export follow the steps described in [Storage Sources](#storage-sources)
+
+# Tests
+
+End-to-end tests of the host overlay (`apps/web/src/lib/host/`) live in `apps/web/e2e/` and run with Playwright against the build, served by `python3 -m http.server`:
+
+```sh
+cd apps/web
+pnpm build
+pnpm exec playwright install chromium  # once
+pnpm test:e2e
+```

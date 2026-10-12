@@ -126,6 +126,9 @@ importers:
         specifier: 2.0.10
         version: 2.0.10
     devDependencies:
+      '@playwright/test':
+        specifier: 1.64.0
+        version: 1.64.0
       '@sveltejs/adapter-static':
         specifier: 3.0.10
         version: 3.0.10(@sveltejs/kit@2.70.3(@sveltejs/vite-plugin-svelte@3.1.2(supports-color@7.2.0)(svelte@4.2.20)(vite@5.4.21(@types/node@24.13.3)(sass@1.104.0)))(svelte@4.2.20)(typescript@6.0.3)(vite@5.4.21(@types/node@24.13.3)(sass@1.104.0)))
@@ -697,6 +700,11 @@ packages:
   '@pkgr/core@0.3.6':
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  '@playwright/test@1.64.0':
+    resolution: {integrity: sha512-oTN9FNYuN6bqQMwiho6jJKLCG2/QOYCixGXuCjRmzOq23eODeukuY2XiAVoVpAECbuezMt1MHQjAiQxK8F+Y+g==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@polka/url@1.0.0-next.24':
     resolution: {integrity: sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==}
@@ -2000,6 +2008,16 @@ packages:
     resolution: {integrity: sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==}
     engines: {node: '>= 6'}
 
+  playwright-core@1.64.0:
+    resolution: {integrity: sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.64.0:
+    resolution: {integrity: sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   postcss-import@15.1.0:
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}
     engines: {node: '>=14.0.0'}
@@ -3090,6 +3108,10 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.3.6': {}
+
+  '@playwright/test@1.64.0':
+    dependencies:
+      playwright: 1.64.0
 
   '@polka/url@1.0.0-next.24': {}
 
@@ -4296,6 +4318,12 @@ snapshots:
   pify@2.3.0: {}
 
   pirates@4.0.5: {}
+
+  playwright-core@1.64.0: {}
+
+  playwright@1.64.0:
+    dependencies:
+      playwright-core: 1.64.0
 
   postcss-import@15.1.0(postcss@8.5.28):
     dependencies:
