@@ -81,7 +81,7 @@ export const fontSize$ = writableNumberLocalStorageSubject()('fontSize', 20);
 export const lineHeight$ = writableNumberLocalStorageSubject()('lineHeight', 1.65);
 export const textIndentation$ = writableNumberLocalStorageSubject()('textIndentation', 0);
 export const textMarginValue$ = writableNumberLocalStorageSubject()('textMarginValue', 0);
-export const hideSpoilerImage$ = writableBooleanLocalStorageSubject()('hideSpoilerImage', true);
+export const hideSpoilerImage$ = writableBooleanLocalStorageSubject()('hideSpoilerImage', false);
 export const hideSpoilerImageMode$ = writableStringLocalStorageSubject<BlurMode>()(
   'hideSpoilerImageMode',
   BlurMode.AFTER_TOC
