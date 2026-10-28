@@ -15,6 +15,7 @@ interface ParagraphMap {
 }
 
 let lastParagraph: ParagraphMap | undefined;
+let lastParagraphElement: Element | undefined;
 
 function isInRubyAnnotation(node: Node) {
   return !!node.parentElement?.closest('rt, rp');
@@ -92,6 +93,7 @@ function locate(map: ParagraphMap, position: number, isEnd: boolean) {
 
 function dismiss(x: number, y: number) {
   lastParagraph = undefined;
+  lastParagraphElement = undefined;
   sendToHost('tap', { text: '', offset: -1, x, y, position: -1 });
 }
 
@@ -129,6 +131,7 @@ function onClick(event: MouseEvent) {
   }
 
   lastParagraph = map;
+  lastParagraphElement = paragraph;
   sendToHost('tap', {
     text: map.text,
     offset,
@@ -181,10 +184,78 @@ function getSelectedText() {
   return (fragment.textContent ?? '').trim();
 }
 
+/** The paragraph's text with each furigana written `(reading)` after its kanji. */
+function annotatedText(paragraph: Element) {
+  const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
+  let text = '';
+
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const parent = node.parentElement;
+    if (parent?.closest('rp')) {
+      continue;
+    }
+
+    text += parent?.closest('rt') ? `(${(node as Text).data})` : (node as Text).data;
+  }
+
+  return text;
+}
+
+/**
+ * Up to `count` paragraphs before `paragraph`, oldest first, never leaving its
+ * book section.
+ */
+function previousParagraphs(paragraph: Element, count: number) {
+  const root = paragraph.closest('.ttu-book-html-wrapper') ?? paragraph.closest('.book-content');
+  const found: Element[] = [];
+
+  if (!root || count <= 0) {
+    return found;
+  }
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  walker.currentNode = paragraph;
+
+  for (
+    let node = walker.previousNode();
+    node && found.length < count;
+    node = walker.previousNode()
+  ) {
+    if (isInRubyAnnotation(node) || !(node as Text).data.trim()) {
+      continue;
+    }
+
+    const previous = findParagraph(node);
+    if (
+      previous &&
+      previous !== paragraph &&
+      !paragraph.contains(previous) &&
+      !found.includes(previous)
+    ) {
+      found.push(previous);
+    }
+  }
+
+  return found.reverse();
+}
+
+function getContext({ paragraphs }: Record<string, unknown>) {
+  if (!lastParagraphElement) {
+    return [];
+  }
+
+  const count = typeof paragraphs === 'number' ? paragraphs : 0;
+
+  return [...previousParagraphs(lastParagraphElement, count), lastParagraphElement].map(
+    annotatedText
+  );
+}
+
 export function initHostLookup() {
   document.addEventListener('click', onClick, true);
 
   registerHostCommand('highlight', highlight);
   registerHostCommand('clearSelection', clearSelection);
   registerHostCommand('getSelectedText', getSelectedText);
+  registerHostCommand('getContext', getContext);
 }

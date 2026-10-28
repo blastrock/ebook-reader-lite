@@ -48,7 +48,7 @@ arrive through `upstream`.
 | `host-debug.ts`    | Fake host for desktop browsers (see Testing)                                                                                 |
 | `host-styles.ts`   | `ttu-host` class on `<html>`, unselectable ruby annotations, selection colour                                                |
 | `host-page.ts`     | `nextPage` / `prevPage` (the reader page hands over its `PageManager`)                                                       |
-| `host-lookup.ts`   | Tap-to-lookup: the `tap` event, `highlight`, `clearSelection`, `getSelectedText`                                             |
+| `host-lookup.ts`   | Tap-to-lookup: the `tap` event, `highlight`, `clearSelection`, `getSelectedText`, `getContext`                               |
 | `host-position.ts` | Tap positions in bookmark units, the `peek` URL parameter                                                                    |
 | `host-theme.ts`    | `theme` event: background and font colours, as RGBA, whenever the theme changes                                              |
 | `host-library.ts`  | Library commands, run on the empty `/host` route in a headless WebView: `listBooks`, `getCover`, `importBooks`, `deleteBook` |
@@ -61,6 +61,12 @@ the platform to be ready). Commands are registered with `registerHostCommand` an
 **Events:** `ready` (`protocolVersion`, `route`), `tap` (`text` of the paragraph, `offset` in it,
 `x`, `y`, `position`; a tap on nothing sends `offset: -1`), `theme`, `exit` (the Exit entry that
 replaces Manage in the reader and settings headers).
+
+**Sentence context.** `getContext({ paragraphs })` returns the last tapped paragraph and up to
+`paragraphs` paragraphs before it, oldest first, for Yomimoto's sentence explanation. Each is its
+text with furigana written `kanji(reading)` (one parenthesis per `<rt>`, `<rp>` dropped).
+Paragraphs are found as the tap finds them (`findParagraph`) and never cross the book section
+(`.ttu-book-html-wrapper`), so both view modes give the same answer. Empty until a tap.
 
 **Protocol version.** `PROTOCOL_VERSION` in `host-bridge.ts` mirrors `TtuBridge.protocolVersion`
 in Yomimoto's `lib/src/media/sources/ttu_bridge.dart`. Bump **both** whenever an event or
