@@ -70,11 +70,11 @@ export const customThemes$ = writableObjectLocalStorageSubject<Record<string, Th
 export const multiplier$ = writableNumberLocalStorageSubject()('autoScrollMultiplier', 20);
 export const fontFamilyGroupOne$ = writableStringLocalStorageSubject()(
   'fontFamilyGroupOne',
-  'Noto Serif JP'
+  'Serif'
 );
 export const fontFamilyGroupTwo$ = writableStringLocalStorageSubject()(
   'fontFamilyGroupTwo',
-  'Noto Sans JP'
+  'Sans-Serif'
 );
 export const fontWeight$ = writableNumberOrNullLocalStorageSubject()('fontWeight', null);
 export const fontSize$ = writableNumberLocalStorageSubject()('fontSize', 20);
