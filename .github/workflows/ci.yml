@@ -38,6 +38,15 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
         working-directory: apps/web
 
+      # The reader uses the system's fonts, and Android renders Japanese with Noto CJK.
+      # Playwright's WenQuanYi Zen Hei and IPA Gothic take precedence over it, and the
+      # former lays some kanji out with no height in vertical text, which breaks taps.
+      - name: Use Noto CJK for Japanese
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+          sudo apt-get remove -y fonts-wqy-zenhei fonts-ipafont-gothic
+
       - name: End-to-end tests
         run: pnpm test:e2e
         working-directory: apps/web
