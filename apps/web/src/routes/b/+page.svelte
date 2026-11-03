@@ -174,6 +174,7 @@
   import { onKeydownReader } from './on-keydown-reader';
   import { setHostPageManager } from '$lib/host/host-page';
   import { getPeekPosition, setHostBookmarkManager } from '$lib/host/host-position';
+  import { withHostTheme } from '$lib/host/host-theme';
   import { onDestroy, onMount, tick } from 'svelte';
   import Fa from 'svelte-fa';
   import {
@@ -401,13 +402,15 @@
     takeWhenBrowser()
   );
 
-  const themeOption$ = theme$.pipe(
-    map(
-      (theme) =>
-        availableThemes.get(theme) || $customThemes$[theme] || availableThemes.get('light-theme')
-    ),
-    filter((o): o is NonNullable<typeof o> => !!o),
-    takeWhenBrowser()
+  const themeOption$ = withHostTheme(
+    theme$.pipe(
+      map(
+        (theme) =>
+          availableThemes.get(theme) || $customThemes$[theme] || availableThemes.get('light-theme')
+      ),
+      filter((o): o is NonNullable<typeof o> => !!o),
+      takeWhenBrowser()
+    )
   );
 
   const backgroundColor$ = themeOption$.pipe(map((o) => o.backgroundColor));

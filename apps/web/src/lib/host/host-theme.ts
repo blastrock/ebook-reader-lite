@@ -4,35 +4,65 @@
  * All rights reserved.
  */
 
-import { combineLatest } from 'rxjs';
-import { customThemes$, theme$ } from '$lib/data/store';
-import { availableThemes } from '$lib/data/theme-option';
-import { sendToHost } from '$lib/host/host-bridge';
+import { BehaviorSubject, combineLatest, map, type Observable } from 'rxjs';
+import type { ThemeOption } from '$lib/data/theme-option';
+import { isHost, registerHostCommand } from '$lib/host/host-bridge';
 
-function toRgba(color: string) {
-  const probe = document.createElement('div');
-  probe.style.color = color;
-  document.body.append(probe);
-  const computed = getComputedStyle(probe).color;
-  probe.remove();
+const STORAGE_KEY = 'ttuHostTheme';
 
-  const [r = 0, g = 0, b = 0, a = 1] = (computed.match(/[\d.]+/g) ?? []).map(Number);
+const THEME_KEYS: (keyof ThemeOption)[] = [
+  'fontColor',
+  'backgroundColor',
+  'selectionFontColor',
+  'selectionBackgroundColor',
+  'hintFuriganaShadowColor',
+  'hintFuriganaFontColor',
+  'tooltipTextFontColor'
+];
 
-  return { r, g, b, a };
+const hostTheme$ = new BehaviorSubject<ThemeOption | undefined>(undefined);
+
+function toThemeOption(value: Record<string, unknown>) {
+  const option = {} as ThemeOption;
+
+  for (const key of THEME_KEYS) {
+    const color = value[key];
+
+    if (typeof color !== 'string') {
+      throw new Error(`setTheme: ${key} must be a string`);
+    }
+
+    option[key] = color;
+  }
+
+  return option;
+}
+
+function readStoredTheme() {
+  try {
+    return toThemeOption(JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}'));
+  } catch (_error) {
+    return undefined;
+  }
+}
+
+/**
+ * The reader's colours: the host's when it has set some, else `own$`, the theme chosen in ttu. The
+ * last colours the host set are kept so that a book opens in them before the host has spoken.
+ */
+export function withHostTheme(own$: Observable<ThemeOption>) {
+  if (isHost() && !hostTheme$.getValue()) {
+    hostTheme$.next(readStoredTheme());
+  }
+
+  return combineLatest([own$, hostTheme$]).pipe(map(([own, host]) => host ?? own));
 }
 
 export function initHostTheme() {
-  combineLatest([theme$, customThemes$]).subscribe(([theme, customThemes]) => {
-    const option =
-      availableThemes.get(theme) || customThemes[theme] || availableThemes.get('light-theme');
+  registerHostCommand('setTheme', (args) => {
+    const option = toThemeOption(args);
 
-    if (!option) {
-      return;
-    }
-
-    sendToHost('theme', {
-      backgroundColor: toRgba(option.backgroundColor),
-      fontColor: toRgba(option.fontColor)
-    });
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(option));
+    hostTheme$.next(option);
   });
 }

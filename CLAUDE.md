@@ -50,7 +50,7 @@ arrive through `upstream`.
 | `host-page.ts`     | `nextPage` / `prevPage` (the reader page hands over its `PageManager`)                                                       |
 | `host-lookup.ts`   | Tap-to-lookup: the `tap` event, `highlight`, `clearSelection`, `getSelectedText`, `getContext`                               |
 | `host-position.ts` | Tap positions in bookmark units, the `peek` URL parameter                                                                    |
-| `host-theme.ts`    | `theme` event: background and font colours, as RGBA, whenever the theme changes                                              |
+| `host-theme.ts`    | `setTheme`: the app sets the reader's colours (`withHostTheme`, hooked into the reader page)                                 |
 | `host-library.ts`  | Library commands, run on the empty `/host` route in a headless WebView: `listBooks`, `getCover`, `importBooks`, `deleteBook` |
 
 **Transport.** Events go to the app with
@@ -59,8 +59,14 @@ the platform to be ready). Commands are registered with `registerHostCommand` an
 `window.ttuHost.<name>(args)`; the app calls them with `callAsyncJavaScript` and awaits the result.
 
 **Events:** `ready` (`protocolVersion`, `route`), `tap` (`text` of the paragraph, `offset` in it,
-`x`, `y`, `position`; a tap on nothing sends `offset: -1`), `theme`, `exit` (the Exit entry that
-replaces Manage in the reader and settings headers).
+`x`, `y`, `position`; a tap on nothing sends `offset: -1`), `exit` (the Exit entry that replaces
+Manage in the reader and settings headers).
+
+**Colours.** `setTheme(option)` takes a whole `ThemeOption` of CSS colours and refuses anything
+less. The reader then uses them instead of the theme chosen in ttu's settings, which stays stored
+but has no effect in the app. They are kept in `localStorage.ttuHostTheme`, so a book opens in the
+last colours set before the app has spoken. Only the reader page is hooked: the settings page has
+its own colours (`app.scss`).
 
 **Sentence context.** `getContext({ paragraphs })` returns the last tapped paragraph and up to
 `paragraphs` paragraphs before it, oldest first, for Yomimoto's sentence explanation. Each is its

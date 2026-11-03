@@ -8,7 +8,7 @@ import { browser } from '$app/environment';
 import { logger } from '$lib/data/logger';
 
 /** Bumped whenever an event or command changes shape. Mirrored in the app. */
-export const PROTOCOL_VERSION = 4;
+export const PROTOCOL_VERSION = 5;
 
 export type HostCommand = (args: Record<string, unknown>) => unknown;
 
