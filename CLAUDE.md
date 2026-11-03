@@ -145,3 +145,6 @@ Releases are `vX.Y.Z` tags. Pushing one runs `release.yml`, which builds and pub
 `ebook-reader-lite-vX.Y.Z.zip` as a GitHub release. Then, in Yomimoto,
 `tool/fetch_ttu.sh --update vX.Y.Z` re-pins `tool/ttu.lock`, which is committed there. Create the
 tag locally; pushing commits and tags is left to the user.
+
+A protocol change is a minor release, not a major one: the tag's version does not track
+`PROTOCOL_VERSION`.
